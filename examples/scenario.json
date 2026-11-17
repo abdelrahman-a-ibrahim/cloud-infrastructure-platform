@@ -1,0 +1,11 @@
+{
+  "environment": "sandbox-a",
+  "resources": [
+    {
+      "name": "workshophub-demo",
+      "owner": "lab",
+      "expires_at": "set-before-deploy"
+    }
+  ],
+  "allow_apply": false
+}

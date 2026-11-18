@@ -3,7 +3,7 @@
   "resources": [
     {
       "name": "workshophub-demo",
-      "owner": "lab",
+      "owner": "development environment",
       "expires_at": "set-before-deploy"
     }
   ],

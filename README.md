@@ -1,52 +1,28 @@
-# Terraform & Terragrunt Platform Lab
+# Cloud Infrastructure Platform
 
-**Reusable infrastructure with disciplined state and change management**
+Reusable cloud infrastructure with Terraform and Terragrunt, isolated state and reviewed change plans.
 
-> Status: foundation only / implementation not started. Independent educational project by Abdelrahman Ahmed. This repository is not a reconstruction of employer systems, a production deployment or proof of completed work.
+**Status: In development** · Personal project by Abdelrahman Ahmed
 
-## The engineering challenge
+## Overview
 
-Provision separate sandbox environments for WorkshopHub using reusable modules and thin Terragrunt environment configuration. Begin with a design and plan review; actual cloud resources are a later explicit milestone.
+An infrastructure-as-code platform for reproducible application environments. Reusable Terraform modules and environment-level Terragrunt configuration are planned around state isolation, scoped identities, traceable changes and resource lifecycle management.
 
-This is a capstone for an experienced engineer. The goal is to defend tradeoffs, investigate failure and produce reproducible evidence, not just get a happy-path demo running.
+## Current state
 
-**Technical focus:** Terraform · Terragrunt · AWS · State · IAM · Resource lifecycle.
+The repository currently contains the system design, delivery requirements, a synthetic input fixture and initial Python interfaces. Runtime behavior, service integrations and deployment are planned. Interface methods raise `NotImplementedError`; there is no running application or published runtime benchmark yet.
 
-## What exists in this first commit
+## Planned capabilities
 
-- A project-specific architecture brief and decision questions.
-- Five implementation milestones with explicit review gates.
-- Failure experiments and acceptance criteria.
-- Typed Python interface scaffolds. Methods deliberately raise `NotImplementedError`.
-- One synthetic scenario fixture; it is an input, not a successful output or benchmark.
-- Evidence and journal templates, an issue template, and syntax/JSON foundation checks.
+- Reusable Terraform modules with thin Terragrunt environment configuration.
+- Environment-specific state isolation and controlled backend initialization.
+- Input validation, standard ownership tags and resource inventory.
+- Reviewed plans, short-lived deployment identity and drift detection.
+- Import/refactor workflows, recovery procedures and predictable teardown.
 
-## What you will build
+Detailed scope is tracked in the [delivery roadmap](docs/roadmap.md) and [requirements](docs/requirements.md).
 
-1. Design module boundaries, environment layout, naming, tags and a resource inventory. Decide which resources genuinely need reuse.
-2. Build a small network and application module with explicit inputs/outputs and validations. Pin tools/providers and commit provider lock files when introduced.
-3. Design backend bootstrapping, encryption, locking, state isolation and recovery. Keep state and plan binaries out of Git.
-4. Add plan-on-change CI, workload identity for cloud access and reviewed apply gates. Practice drift detection and an import/refactor operation.
-5. Provision one bounded sandbox, test teardown and publish a cost/lifecycle report. Prove one environment cannot alter another environment’s state.
-
-## Start here
-
-1. Read [the architecture brief](docs/architecture.md) and record the first decision in [ADR 0001](docs/adr/0001-system-boundaries.md).
-2. Inspect [the synthetic scenario](examples/scenario.json) and [the interface boundary](src/terraform_terragrunt_platform_lab/interfaces.py).
-3. Run the foundation checks from the repository root:
-
-   ```sh
-   python3 tools/check_foundation.py
-   ```
-
-   Python 3.9+ is sufficient for these standard-library checks. They parse Python and JSON; they do **not** validate runtime behavior, deployment safety, protocol compliance or completion.
-4. Create a feature branch, implement milestone 1 and add behavior tests before adapters.
-5. Follow [the milestone backlog](docs/milestones.md). Select and pin implementation dependencies when you introduce them; none are installed by this scaffold.
-6. Complete [the failure lab](docs/failure-lab.md), gather [evidence](docs/evidence/README.md) and review [acceptance criteria](docs/acceptance.md).
-
-There is deliberately no `deploy`, `apply`, paid API call, installed cloud SDK or working runtime in this initial commit.
-
-## Architecture at a glance
+## Architecture
 
 ```text
 Environment configuration -> Terragrunt -> Terraform modules
@@ -54,69 +30,67 @@ Environment configuration -> Terragrunt -> Terraform modules
                                 remote state / AWS sandbox
 ```
 
-This is a proposed lab architecture. [The design brief](docs/architecture.md) identifies decisions still to make.
+This is the proposed component design. See [architecture](docs/architecture.md) for boundaries and [architecture decisions](docs/adr/0001-system-boundaries.md) for the choices still to resolve.
 
-## Learning prerequisites
+## Technology direction
 
-- None. This is an entry point into the curriculum.
+Terraform · Terragrunt · AWS · State · IAM · Resource lifecycle.
 
-Repositories are separate and can evolve independently. If you connect them later, exchange versioned fixtures or contracts; do not rely on sibling-relative imports. You can implement a standalone synthetic adapter first.
+These technologies describe the intended implementation. Dependencies and compatible versions will be pinned when introduced. Optional services are not required by the current source checks.
 
-## What makes this substantial
+## Working with the source
 
-- Module boundary versus environment composition
-- Backend bootstrap and recovery
-- Identity scope for planning versus applying
+```sh
+git clone https://github.com/abdelrahman-a-ibrahim/cloud-infrastructure-platform.git
+cd cloud-infrastructure-platform
+python3 tools/check_project.py
+```
 
-You must explain what happens on retries, partial failure, concurrent operations and recovery. Record what your test environment cannot prove. No result is accepted simply because a dashboard is green.
+Python 3.9+ is sufficient for the current standard-library source check. It parses Python and JSON and checks required project files. It does **not** run an application, validate deployment behavior or establish feature completion.
 
-## Definition of done
+The initial application boundary is in [`src/cloud_infrastructure_platform/interfaces.py`](src/cloud_infrastructure_platform/interfaces.py). [`examples/scenario.json`](examples/scenario.json) provides a synthetic development input. Installation and runtime commands will be added with the first executable release.
+
+## Quality and reliability
 
 - A reviewed plan explains every create/update/delete operation.
 - No credentials, state snapshots or sensitive plans are tracked.
 - Two environments use independent state and identity boundaries.
 - Destroy is tested and residual billable resources are enumerated.
 
-Also supply installation/reproduction instructions, dependency versions, meaningful behavior tests, cleanup instructions, an architecture decision log and evidence from a repeatable demonstration. A checklist or syntax check alone does not satisfy completion.
+These are acceptance targets. Failure scenarios are specified in [reliability verification](docs/reliability.md); [results](docs/verification/README.md) will be recorded as implementation progresses. Correctness and performance claims must reference an actual environment, workload and commit.
 
-## Advanced extensions
+## Development roadmap
 
-- Policy checks for public exposure and missing tags
-- Ephemeral preview environments with expiry
-- Module contract testing
-- Compare Terragrunt orchestration with simpler Terraform roots
+- [ ] Contracts and system boundaries
+- [ ] Core implementation and behavior tests
+- [ ] External adapters and scoped access
+- [ ] Failure recovery and operational visibility
+- [ ] Reproducible deployment and release validation
 
-Extensions follow a working baseline; they are not requirements for the first milestone.
+See [delivery stages and future scope](docs/roadmap.md). For deployment prerequisites and resource lifecycle, see [operations](docs/operations.md).
 
-## Boundaries and costs
+## Repository structure
 
-Use fictional services, synthetic inputs and a disposable sandbox. Do not copy employer repositories, runbooks, tickets, customer data, credentials or internal architecture. Real cloud/provider adapters are future work and may incur costs; [the operations plan](docs/operations.md) must identify account, region, budget, resource inventory and teardown before deployment. Budget alerts notify; they do not constitute a hard spending cap.
+```text
+src/cloud_infrastructure_platform/       Initial application interfaces
+examples/                  Synthetic development inputs
+tests/                     Behavior verification plan
+docs/architecture.md       Component design and boundaries
+docs/requirements.md       Functional and quality requirements
+docs/roadmap.md            Delivery stages and future scope
+docs/reliability.md        Failure and recovery scenarios
+docs/operations.md         Runtime and deployment plan
+docs/verification/         Results as implementation progresses
+tools/check_project.py     Source integrity check
+```
 
-## Publishable evidence, when earned
+## Development
 
-A completed lab may support a portfolio case study labeled **independent project**. Share your original code, sanitized diagrams, measured results and a failure/recovery write-up. Employer experience and personal lab evidence remain separate. Never copy illustrative fixture values into a results claim.
+Use focused feature branches, add behavior tests with implementation changes and update the relevant architecture decision when guarantees change. Read [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Primary references
+This is an independent personal project. Examples use synthetic data. See [NOTICE.md](NOTICE.md) for licensing status.
+
+## References
 
 - https://developer.hashicorp.com/terraform/docs
 - https://docs.terragrunt.com/
-
-Read current official documentation when selecting SDKs, images, tool versions and integrations. The scaffold intentionally does not guess compatible version combinations.
-
-## Repository map
-
-- `src/terraform_terragrunt_platform_lab/interfaces.py`
-- `examples/scenario.json`
-- `docs/architecture.md`
-- `docs/milestones.md`
-- `docs/failure-lab.md`
-- `docs/acceptance.md`
-- `docs/learning-journal.md`
-- `docs/evidence/README.md`
-- `docs/operations.md` — local/cloud boundaries and teardown plan.
-- `docs/adr/` — decisions and alternatives.
-- `tools/check_foundation.py` — syntax and fixture integrity only.
-
-## Working agreement
-
-Keep commits focused: `docs`, `feat`, `test`, `fix`, `ops`. Work on a feature branch and merge only after the milestone review. Consult [CONTRIBUTING.md](CONTRIBUTING.md). No open-source license has been chosen yet; see [NOTICE.md](NOTICE.md).
